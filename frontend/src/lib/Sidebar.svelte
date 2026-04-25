@@ -1,5 +1,6 @@
 <script>
-  import { session } from '$lib/stores.js';
+  import { goto } from '$app/navigation';
+  import { session, currentLead, currentNudge, currentPdf, currentTranscript } from '$lib/stores.js';
   export let activeStep = 1;
 
   const steps = [
@@ -8,6 +9,15 @@
     { n: 3, label: 'PDF' },
     { n: 4, label: 'Approve' },
   ];
+
+  function logout() {
+    session.set({ session_id: null, bda_phone: '', evaluator_phone: '' });
+    currentLead.set(null);
+    currentNudge.set(null);
+    currentPdf.set(null);
+    currentTranscript.set('');
+    goto('/');
+  }
 </script>
 
 <aside class="sidebar">
@@ -35,6 +45,10 @@
       <p class="mono">{$session.bda_phone}</p>
     </div>
   {/if}
+
+  <button class="logout-btn" on:click={logout}>
+    ↩ New session
+  </button>
 </aside>
 
 <style>
@@ -101,4 +115,23 @@
   }
   .label-tiny { color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
   .mono { font-family: ui-monospace, monospace; font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  .logout-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 9px 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .logout-btn:hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+  }
 </style>
