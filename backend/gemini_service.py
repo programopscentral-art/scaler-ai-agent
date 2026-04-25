@@ -1,7 +1,6 @@
 import google.generativeai as genai
 import os
 import json
-import base64
 from typing import List, Tuple, Dict, Any
 from models import LeadProfile
 
@@ -202,12 +201,23 @@ CRITICAL RULES:
 # ─────────────────────────────────────────────
 # PROMPT 4: TRANSCRIBE + EXTRACT FROM AUDIO
 # ─────────────────────────────────────────────
+_MIME_NORMALISE = {
+    "audio/x-m4a": "audio/mp4",
+    "audio/m4a": "audio/mp4",
+    "audio/x-wav": "audio/wav",
+    "audio/x-aiff": "audio/aiff",
+    "audio/mpeg": "audio/mp3",
+    "audio/x-mpeg": "audio/mp3",
+    "audio/ogg": "audio/ogg",
+}
+
+
 def transcribe_and_extract_audio(
     audio_bytes: bytes, audio_mime: str, lead: LeadProfile
 ) -> Dict[str, Any]:
     """Use Gemini's native audio understanding to transcribe + analyse in one call."""
 
-    audio_data = base64.b64encode(audio_bytes).decode("utf-8")
+    mime = _MIME_NORMALISE.get(audio_mime, audio_mime)
 
     prompt = f"""You are a call analyst. Listen to this sales call recording between a Scaler BDA and a lead named {lead.name}.
 
@@ -236,8 +246,8 @@ Return ONLY valid JSON:
         [
             {
                 "inline_data": {
-                    "mime_type": audio_mime,
-                    "data": audio_data,
+                    "mime_type": mime,
+                    "data": audio_bytes,
                 }
             },
             prompt,
