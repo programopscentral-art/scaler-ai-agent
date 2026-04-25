@@ -6,7 +6,7 @@ from typing import List, Tuple, Dict, Any
 from models import LeadProfile
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-_MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+_MODEL_NAME = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 model = genai.GenerativeModel(_MODEL_NAME)
 
 

@@ -11,18 +11,17 @@
 
 ---
 
-## What It Does
+## What I Built
 
-A full-stack sales enablement tool with two core interventions:
+A full-stack web app where an evaluator enters BDA and evaluator WhatsApp numbers, inputs a lead's profile and call transcript (or uploads an audio recording), and the system: (1) sends the BDA a scannable pre-call brief on WhatsApp — persona analysis, resonant angles, likely objections, and a suggested opening line they can literally say on the call; (2) generates a 2–3 page personalised PDF that addresses each of the lead's specific questions from the call with concrete reasoning tied to their profile; (3) holds the PDF behind a BDA approval gate — approve, edit, or skip — before anything reaches the lead.
 
-| Intervention | Who receives it | When | Gate |
-|---|---|---|---|
-| **Pre-call WhatsApp brief** | BDA | Before the call | None — sent immediately |
-| **Personalised PDF** | Lead (via BDA) | After the call | BDA must approve before send |
+## One Failure I Found
 
-The brief gives the BDA: persona analysis, resonant angles, likely objections, and a suggested opening line — all in under 30 seconds.
+When Meera's transcript is short (under 100 words), Gemini extracts only the surface questions and misses the emotional subtext — the underlying fear of disappointing her parents if she turns down a government job. The PDF becomes technically correct but emotionally flat and unlikely to move her. Fix: a second Gemini pass targeting underlying fears when transcript length is below threshold.
 
-The PDF addresses each of the lead's specific questions from the call, with Scaler's published outcomes mapped to their profile.
+## Scale Plan
+
+At 100,000 leads/month the first bottleneck is PDF generation latency — reportlab plus two sequential Gemini calls takes 8–12 seconds per lead, and a single uvicorn worker queues up immediately. Fix: background job queue (Celery + Redis) so PDF generation runs async after the call ends. Second constraint: Gemini Flash's free-tier rate limit (1,500 RPM) hits at roughly 25 concurrent users — paid tier or exponential backoff batching solves it.
 
 ---
 

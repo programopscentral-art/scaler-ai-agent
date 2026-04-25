@@ -20,10 +20,10 @@
       linkedin_summary: 'IIT Madras, 9 years at Google in distributed systems. L5 SWE. Mentors juniors. Skeptical of bootcamps but open to structured advanced programs.'
     },
     meera: {
-      name: 'Meera Reddy', company: 'Govt Polytechnic, Hyderabad', experience_years: 0,
-      role: 'Final Year Student', persona_type: 'meera',
-      intent: 'I have a government job offer but want a tech career. Family wants security. I need to know if Scaler is worth the loan.',
-      linkedin_summary: 'Final year ECE student, Tier-3 college. Self-learnt Python via YouTube. First-generation graduate. Government job offer (32k/month) on the table.'
+      name: 'Meera Patel', company: 'Tier-3 Engineering College', experience_years: 0,
+      role: 'Final Year B.Tech Student', persona_type: 'meera',
+      intent: 'I need a job. My family wants me to take the government job offer but I want to work at a product company. I don\'t know if I can afford Scaler or even clear the entrance test.',
+      linkedin_summary: 'Final year B.Tech student, Tier-3 college, 0 YoE. No LinkedIn. Family income below ₹3.5L/year. Government job offer on the table. First-generation graduate.'
     }
   };
 
@@ -190,7 +190,7 @@
             <strong>{p.name}</strong>
             <span class="preset-tag" style="background:{meta.bg};color:{meta.color}">{meta.tag}</span>
           </div>
-          <span class="preset-sub">{p.company} · {p.experience_years}y</span>
+          <span class="preset-sub">{p.company} · {p.experience_years === 0 ? 'Fresher' : p.experience_years + 'y'}</span>
         </button>
       {/each}
       <button class="preset preset-custom" class:selected={activePreset === null && !lead.name} on:click={() => loadPreset('custom')}>
