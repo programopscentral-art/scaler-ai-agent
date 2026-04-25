@@ -265,7 +265,19 @@ async def approve_and_send(req: ApproveRequest):
 # Serve SvelteKit static build (mounted last so /api/* routes win)
 _FRONTEND_BUILD = os.path.join(os.path.dirname(__file__), "..", "frontend", "build")
 if os.path.isdir(_FRONTEND_BUILD):
-    app.mount("/", StaticFiles(directory=_FRONTEND_BUILD, html=True), name="static")
+    # Mount compiled JS/CSS assets
+    _app_dir = os.path.join(_FRONTEND_BUILD, "_app")
+    if os.path.isdir(_app_dir):
+        app.mount("/_app", StaticFiles(directory=_app_dir), name="svelte-assets")
+
+    @app.get("/{full_path:path}")
+    async def spa_fallback(full_path: str):
+        # Serve exact static file if it exists (favicon, robots.txt, etc.)
+        candidate = os.path.join(_FRONTEND_BUILD, full_path)
+        if os.path.isfile(candidate):
+            return FileResponse(candidate)
+        # Fall back to index.html for all SPA routes (/generate, /nudge, /approve)
+        return FileResponse(os.path.join(_FRONTEND_BUILD, "index.html"))
 else:
     @app.get("/")
     async def root():
