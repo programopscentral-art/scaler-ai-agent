@@ -4,3 +4,5 @@ builder = "DOCKERFILE"
 [deploy]
 startCommand = "/start.sh"
 restartPolicyType = "on_failure"
+healthcheckPath = "/health"
+healthcheckTimeout = 120

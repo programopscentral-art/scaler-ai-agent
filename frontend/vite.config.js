@@ -7,6 +7,15 @@ const config = {
     proxy: {
       '/api': 'http://localhost:8000'
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) return 'vendor';
+        }
+      }
+    }
   }
 };
 

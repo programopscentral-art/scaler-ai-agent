@@ -12,7 +12,14 @@
 
   onMount(async () => {
     try {
-      info = await api.sandboxInfo();
+      // Cache per-session so we don't re-fetch on every page navigation
+      const cached = sessionStorage.getItem('_sandbox_info');
+      if (cached) {
+        info = JSON.parse(cached);
+      } else {
+        info = await api.sandboxInfo();
+        sessionStorage.setItem('_sandbox_info', JSON.stringify(info));
+      }
       const digits = (info.sandbox_number || '').replace(/[^0-9]/g, '');
       const text = encodeURIComponent(info.join_message || '');
       openWaUrl = `https://wa.me/${digits}?text=${text}`;
