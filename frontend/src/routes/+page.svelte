@@ -63,23 +63,47 @@
     </div>
   </div>
 
+  <!-- Evaluator quick-start guide -->
+  <div class="card guide-card">
+    <div class="guide-title">
+      <span class="guide-icon">🧭</span>
+      <strong>Evaluator quick-start — 4 steps</strong>
+    </div>
+    <ol class="guide-steps">
+      <li>
+        <span class="guide-num">1</span>
+        <span><strong>Join the WhatsApp sandbox</strong> — open WhatsApp, message <code>+1 415 523 8886</code>, send <code>join fix-orange</code>. You'll get a confirmation. Do this once per phone number.</span>
+      </li>
+      <li>
+        <span class="guide-num">2</span>
+        <span><strong>Enter your number in both fields below</strong> — for evaluation, use the same number as both "BDA" and "Evaluator". The BDA field is who receives the pre-call WhatsApp brief.</span>
+      </li>
+      <li>
+        <span class="guide-num">3</span>
+        <span><strong>Pick a preset persona</strong> (Rohan / Karthik / Meera) or enter a custom lead on the next page. Paste the call transcript, then click <em>Generate &amp; Send Nudge</em> and <em>Generate PDF</em>.</span>
+      </li>
+      <li>
+        <span class="guide-num">4</span>
+        <span><strong>Approve the PDF</strong> on the final screen — enter the lead's number and click Approve. The PDF link arrives on WhatsApp.</span>
+      </li>
+    </ol>
+  </div>
+
   <!-- Session form -->
   <div class="card form-card">
     <h2>Start a session</h2>
-    <p class="muted form-desc">
-      Enter both WhatsApp numbers. The BDA gets the pre-call brief; you approve the PDF
-      before it reaches the lead.
-    </p>
 
     <WhatsAppOptIn variant="full" />
 
     <div class="field">
       <label for="bda">BDA WhatsApp Number</label>
       <input id="bda" placeholder="+91 98765 43210" bind:value={bda_phone} />
+      <p class="field-hint">This number receives the AI-generated pre-call brief on WhatsApp.</p>
     </div>
     <div class="field">
-      <label for="ev">Evaluator WhatsApp Number</label>
+      <label for="ev">Evaluator / Your WhatsApp Number</label>
       <input id="ev" placeholder="+91 98765 43210" bind:value={evaluator_phone} />
+      <p class="field-hint">Stored for session tracking. Use the same number as above to receive everything on one phone.</p>
     </div>
 
     {#if error}<div class="error">{error}</div>{/if}
@@ -87,8 +111,6 @@
     <button class="btn-primary full" disabled={loading} on:click={start}>
       {#if loading}<span class="spinner"></span>Starting session...{:else}Start Session →{/if}
     </button>
-
-    <p class="muted hint">Make sure both numbers have joined the Twilio WhatsApp sandbox first.</p>
   </div>
 </div>
 
@@ -175,14 +197,50 @@
   .flow-card span { font-size: 11px; color: var(--text-muted); }
   .flow-arrow { color: var(--text-muted); font-size: 18px; font-weight: 300; padding: 0 2px; }
 
+  /* Evaluator guide card */
+  .guide-card {
+    width: 100%;
+    max-width: 520px;
+    padding: 20px 24px;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-left: 4px solid #F59E0B;
+    margin-bottom: 14px;
+  }
+  .guide-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; margin-bottom: 14px;
+  }
+  .guide-icon { font-size: 18px; }
+  .guide-steps {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .guide-steps li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 13px; line-height: 1.55; color: var(--text-secondary);
+  }
+  .guide-num {
+    min-width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #F59E0B; color: white;
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 800;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .guide-steps code {
+    background: white; border: 1px solid #FDE68A;
+    padding: 1px 6px; border-radius: 4px;
+    font-size: 12px; color: #92400E; font-weight: 600;
+  }
+
   /* Form card */
   .form-card {
     width: 100%;
     max-width: 520px;
     padding: 32px;
   }
-  .form-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-  .form-desc { margin-bottom: 20px; line-height: 1.5; }
+  .form-card h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+  .field-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 5px; line-height: 1.4; }
   .full { width: 100%; margin-top: 6px; }
-  .hint { margin-top: 14px; text-align: center; }
 </style>
