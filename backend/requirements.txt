@@ -4,6 +4,19 @@ python-multipart==0.0.6
 pydantic==2.5.0
 google-generativeai==0.3.2
 twilio==8.10.0
-supabase==2.3.0
 reportlab==4.0.8
 python-dotenv==1.0.0
+
+# Supabase + sub-deps pinned to avoid gotrue/httpx proxy= conflict
+supabase==2.3.0
+gotrue>=2.4.0,<3.0.0
+postgrest>=0.16.0,<1.0.0
+storage3>=0.7.0,<1.0.0
+realtime>=1.0.0,<3.0.0
+supafunc>=0.3.0,<1.0.0
+
+# httpx<0.28 required — 0.28 dropped the proxy= kwarg that gotrue uses
+httpx>=0.24.0,<0.28.0
+
+# websockets pinned to avoid realtime conflict
+websockets>=11,<16
