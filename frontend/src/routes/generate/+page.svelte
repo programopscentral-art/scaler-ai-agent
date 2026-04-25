@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { goto } from '$app/navigation';
   import { api } from '$lib/api.js';
   import { session, currentLead, currentNudge, currentPdf, currentTranscript } from '$lib/stores.js';
@@ -50,7 +50,10 @@
   let leadIdLocal = null;
   let activePreset = null;
 
-  onMount(() => {
+  onMount(async () => {
+    // tick() lets the store propagate its value before we check —
+    // prevents a false redirect when navigating here right after session.set()
+    await tick();
     if (!$session.session_id) {
       goto('/');
       return;

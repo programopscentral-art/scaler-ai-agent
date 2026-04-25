@@ -1,13 +1,19 @@
 <script>
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { api } from '$lib/api.js';
   import { session } from '$lib/stores.js';
   import WhatsAppOptIn from '$lib/WhatsAppOptIn.svelte';
 
-  let bda_phone = '';
-  let evaluator_phone = '';
+  let bda_phone = $session.bda_phone || '';
+  let evaluator_phone = $session.evaluator_phone || '';
   let loading = false;
   let error = '';
+
+  onMount(() => {
+    // If a valid session already exists, skip straight to generate
+    if ($session.session_id) goto('/generate');
+  });
 
   async function start() {
     error = '';
@@ -21,7 +27,7 @@
       session.set({ session_id: res.session_id, bda_phone, evaluator_phone });
       goto('/generate');
     } catch (e) {
-      error = e.message;
+      error = e.message || 'Failed to start session. Please try again.';
     } finally {
       loading = false;
     }
@@ -106,11 +112,11 @@
       <p class="field-hint">Stored for session tracking. Use the same number as above to receive everything on one phone.</p>
     </div>
 
-    {#if error}<div class="error">{error}</div>{/if}
-
     <button class="btn-primary full" disabled={loading} on:click={start}>
       {#if loading}<span class="spinner"></span>Starting session...{:else}Start Session →{/if}
     </button>
+
+    {#if error}<div class="error" style="margin-top:12px">{error}</div>{/if}
   </div>
 </div>
 
